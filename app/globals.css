@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  
+  --animate-shine: shine 1.5s ease-in-out infinite;
+  @keyframes shine {
+    100% { transform: translateX(250%) skewX(-12deg); }
+  }
+}
+
+@layer utilities {
+  .text-shadow-glow-cyan {
+    text-shadow: 0 0 15px rgba(34, 211, 238, 0.6);
+  }
+  .text-shadow-glow-purple {
+    text-shadow: 0 0 15px rgba(168, 85, 247, 0.6);
+  }
+  .text-shadow-glow-emerald {
+    text-shadow: 0 0 15px rgba(16, 185, 129, 0.6);
+  }
+  
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+  @keyframes typing {
+    from {
+      width: 0;
+    }
+    to {
+      width: 100%;
+    }
+  }
+}
