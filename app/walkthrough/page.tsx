@@ -322,7 +322,7 @@ export default function Walkthrough() {
                      <motion.div 
                         key="step3"
                         initial={{ opacity: 0, y: 50, scale: 0.8, filter: 'blur(20px)' }} animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
-                        className="pointer-events-auto absolute inset-0 flex items-center justify-center"
+                        className="pointer-events-auto absolute inset-0 flex flex-col items-center justify-center"
                      >
                           <div className="relative">
                              {/* Glowing backdrop */}
@@ -372,7 +372,8 @@ export default function Walkthrough() {
                              </div>
                           </div>
                           
-                          <div className="absolute -bottom-24 left-1/2 -translate-x-1/2 flex flex-col gap-4 w-full max-w-xs pointer-events-auto">
+                          {/* Buttons in flow */}
+                          <div className="mt-8 flex flex-col gap-4 w-full max-w-xs mx-auto pointer-events-auto relative z-20">
                               <button 
                                  onClick={() => router.push('/employee')}
                                  className="group relative inline-flex h-14 w-full items-center justify-center overflow-hidden rounded-lg bg-gradient-to-r from-cyan-500 to-purple-600 px-8 font-bold text-white transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_rgba(34,211,238,0.5)] cursor-pointer tracking-widest"
