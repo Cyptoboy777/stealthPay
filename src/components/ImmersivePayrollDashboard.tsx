@@ -373,7 +373,7 @@ function AssistantPanel({ salary, splits }: { salary: number; splits: Record<Spl
       id: 'intro',
       role: 'assistant',
       content:
-        'I am your Gemini payroll companion. Ask about salary routing, budgets, privacy, or which selective disclosure proof to generate next.',
+        'I am your StealthPay AI payroll companion. Ask about salary routing, budgets, privacy, or which selective disclosure proof to generate next.',
     },
   ]);
   const [input, setInput] = useState('How much should I keep liquid this cycle?');
@@ -401,7 +401,7 @@ function AssistantPanel({ salary, splits }: { salary: number; splits: Record<Spl
         {
           id: crypto.randomUUID(),
           role: 'assistant',
-          content: data.answer || 'I could not reach Gemini, but your encrypted payroll policy still looks valid.',
+          content: data.answer || 'I could not reach StealthPay AI, but your encrypted payroll policy still looks valid.',
         },
       ]);
     } catch {
@@ -411,7 +411,7 @@ function AssistantPanel({ salary, splits }: { salary: number; splits: Record<Spl
           id: crypto.randomUUID(),
           role: 'assistant',
           content:
-            'Gemini is offline in this environment. Keep essential cash in Main Wallet, savings in a stealth address, and route only surplus to yield.',
+            'StealthPay AI is offline in this environment. Keep essential cash in Main Wallet, savings in a stealth address, and route only surplus to yield.',
         },
       ]);
     } finally {
@@ -424,7 +424,7 @@ function AssistantPanel({ salary, splits }: { salary: number; splits: Record<Spl
       <CardHeader className="border-b border-purple-500/10 pb-4">
         <CardTitle className="flex items-center gap-2 font-mono text-base text-purple-100">
           <Bot className="h-5 w-5 text-purple-300" />
-          Gemini AI Payroll Assistant
+          StealthPay AI Payroll Assistant
         </CardTitle>
         <CardDescription className="font-mono text-[10px] uppercase tracking-widest text-purple-200/42">
           Holographic privacy and budget counsel
@@ -448,13 +448,13 @@ function AssistantPanel({ salary, splits }: { salary: number; splits: Record<Spl
           {loading && (
             <div className="inline-flex items-center gap-2 rounded-lg border border-purple-500/24 bg-purple-500/10 px-3 py-2 font-mono text-xs text-purple-200">
               <BrainCircuit className="h-4 w-4 animate-pulse" />
-              Gemini thinking...
+              StealthPay AI thinking...
             </div>
           )}
         </div>
         <form onSubmit={submit} className="flex gap-2">
           <input
-            aria-label="Ask Gemini payroll assistant"
+            aria-label="Ask StealthPay AI payroll assistant"
             value={input}
             onChange={(event) => setInput(event.target.value)}
             className="min-w-0 flex-1 rounded-lg border border-purple-500/24 bg-black/45 px-3 py-3 text-sm text-purple-50 outline-none transition focus:border-purple-300"
@@ -508,7 +508,15 @@ function CompliancePanel() {
 }
 
 export default function ImmersivePayrollDashboard() {
-  const { walletAddress, balance, signer } = useWeb3();
+  const { 
+    walletAddress, 
+    balance, 
+    signer, 
+    payrollState, 
+    setPayrollState, 
+    employeeClaimHash, 
+    setEmployeeClaimHash 
+  } = useWeb3();
   const [mounted, setMounted] = useState(false);
   const [splits, setSplits] = useState<Record<SplitKey, number>>({ main: 55, savings: 25, yield: 20 });
   const salary = 5240;
@@ -516,16 +524,25 @@ export default function ImmersivePayrollDashboard() {
   // Real Web3/FHE Decryption and ZK Claim states
   const [isDecrypted, setIsDecrypted] = useState(false);
   const [isClaiming, setIsClaiming] = useState(false);
-  const [claimed, setClaimed] = useState(false);
-  const [txHash, setTxHash] = useState<string | null>(null);
-  const [amount, setAmount] = useState<string | null>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
+
+  const claimed = payrollState === 'claimed';
+  const txHash = employeeClaimHash;
+  const amount = '5,240.00';
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   const handleDecryptRequest = () => {
+    if (payrollState === 'idle') {
+      alert("No payroll batch has been uploaded yet. Please act as an Employer first!");
+      return;
+    }
+    if (payrollState === 'uploaded') {
+      alert("The payroll batch is uploaded but awaiting Treasurer multi-sig approval. Please act as a Treasurer first to approve it!");
+      return;
+    }
     if (!isDecrypted) {
       if (!signer) {
         alert('Connect wallet to decrypt balance');
@@ -541,7 +558,6 @@ export default function ImmersivePayrollDashboard() {
     setShowAuthModal(false);
     try {
       await signer!.signMessage('Decrypt my FHE payroll buffer for epoch 92: StealthPay');
-      setAmount('5,240.00');
       setIsDecrypted(true);
     } catch (err) {
       console.error('User denied decryption signature', err);
@@ -556,9 +572,10 @@ export default function ImmersivePayrollDashboard() {
     setIsClaiming(true);
     try {
       const sig = await signer.signMessage('Authorizing claim of encrypted assets to my wallet via Privara route.');
-      setTxHash(ethers.keccak256(ethers.toUtf8Bytes(sig)).slice(0, 42));
+      const computedHash = ethers.keccak256(ethers.toUtf8Bytes(sig)).slice(0, 42);
+      setEmployeeClaimHash(computedHash);
       setTimeout(() => {
-        setClaimed(true);
+        setPayrollState('claimed');
         setIsClaiming(false);
       }, 3000);
     } catch (err) {
@@ -619,6 +636,13 @@ export default function ImmersivePayrollDashboard() {
                   <span className={`w-1.5 h-1.5 rounded-full ${claimed ? 'bg-emerald-400' : 'bg-amber-400 animate-pulse'}`}></span>
                   <span className="text-[9px] uppercase tracking-wider text-cyan-500/60">{claimed ? 'SETTLED' : 'LOCKED'}</span>
                 </span>
+              </div>
+
+              <div className="text-[9px] font-mono tracking-widest uppercase pb-1 border-b border-cyan-500/5">
+                {payrollState === 'idle' && <span className="text-amber-500">● AWAITING_EMPLOYER_UPLOAD</span>}
+                {payrollState === 'uploaded' && <span className="text-purple-400 animate-pulse">● AWAITING_TREASURER_MULTISIG</span>}
+                {payrollState === 'approved' && <span className="text-cyan-400">● UNLOCKED / READY_TO_CLAIM</span>}
+                {payrollState === 'claimed' && <span className="text-emerald-400">● DISBURSED_TO_STEALTH_NODES</span>}
               </div>
               
               <div className="space-y-1">

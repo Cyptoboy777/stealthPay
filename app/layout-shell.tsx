@@ -1,20 +1,46 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
-import { useWeb3 } from '@/src/lib/Web3Context';
-import { Shield, Wallet, LogOut, Code, Activity, Hexagon } from 'lucide-react';
+import { useWeb3, Role } from '@/src/lib/Web3Context';
+import { Shield, Wallet, LogOut, Code, Activity, Hexagon, ChevronDown, RefreshCw } from 'lucide-react';
 import { Button } from '@/src/components/ui/Button';
 
 export function LayoutShell({ children }: { children: React.ReactNode }) {
-  const { isConnected, walletAddress, role, disconnectWallet } = useWeb3();
+  const { isConnected, walletAddress, role, disconnectWallet, connectWallet, resetWorkflow } = useWeb3();
   const router = useRouter();
   const pathname = usePathname();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown on click outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleLogout = () => {
     disconnectWallet();
+    setIsDropdownOpen(false);
     router.push('/');
+  };
+
+  const handleSelectRole = async (selectedRole: Role) => {
+    setIsDropdownOpen(false);
+    await connectWallet(selectedRole);
+    router.push(`/${selectedRole}`);
+  };
+
+  const handleResetWorkflow = () => {
+    resetWorkflow();
+    alert("System-wide payroll workflow state reset to Genesis (IDLE)!");
+    setIsDropdownOpen(false);
   };
 
   const isHome = pathname === '/';
@@ -36,7 +62,7 @@ export function LayoutShell({ children }: { children: React.ReactNode }) {
             </span>
           </Link>
           
-          <nav className="flex items-center space-x-4">
+          <nav className="flex items-center space-x-4" ref={dropdownRef}>
             {isConnected ? (
               <>
                 <div className="flex items-center gap-2 hidden sm:flex">
@@ -47,30 +73,119 @@ export function LayoutShell({ children }: { children: React.ReactNode }) {
                   </span>
                 </div>
 
-                {/* Simulated role badges */}
-                <div className="flex gap-2.5 items-center bg-black/40 border border-cyan-500/20 rounded-lg p-1.5 shadow-[inset_0_0_20px_rgba(6,182,212,0.05)]">
-                  <span className="hidden sm:inline-block text-xs text-cyan-300/80 font-mono pl-3 pr-2 border-r border-cyan-500/20">
-                    {walletAddress?.slice(0, 6)}...{walletAddress?.slice(-4)}
-                  </span>
+                {/* Simulated role badges / Switcher */}
+                <div className="relative">
+                  <button 
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                    className="flex gap-2.5 items-center bg-black/40 border border-cyan-500/20 rounded-lg p-1.5 hover:bg-cyan-500/10 shadow-[inset_0_0_20px_rgba(6,182,212,0.05)] transition-all duration-200 cursor-pointer"
+                  >
+                    <span className="hidden sm:inline-block text-xs text-cyan-300/80 font-mono pl-2 pr-2 border-r border-cyan-500/20">
+                      {walletAddress?.slice(0, 6)}...{walletAddress?.slice(-4)}
+                    </span>
+                    
+                    <span className={`text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded border shadow-[0_0_10px_rgba(6,182,212,0.1)] flex items-center gap-1.5 ${
+                      role === 'employer' ? 'text-purple-400 border-purple-500/40 bg-purple-500/10' :
+                      role === 'employee' ? 'text-cyan-400 border-cyan-500/40 bg-cyan-500/10' :
+                      'text-emerald-400 border-emerald-500/40 bg-emerald-500/10'
+                    }`}>
+                      {role}_NODE
+                      <ChevronDown className="h-3 w-3 shrink-0" />
+                    </span>
+                  </button>
                   
-                  <span className={`text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded border shadow-[0_0_10px_rgba(6,182,212,0.1)] ${
-                    role === 'employer' ? 'text-purple-400 border-purple-500/40 bg-purple-500/10' :
-                    role === 'employee' ? 'text-cyan-400 border-cyan-500/40 bg-cyan-500/10' :
-                    'text-emerald-400 border-emerald-500/40 bg-emerald-500/10'
-                  }`}>
-                    {role}_NODE
-                  </span>
+                  {isDropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-56 rounded-xl border border-cyan-500/30 bg-black/90 p-2 backdrop-blur-2xl shadow-[0_10px_30px_rgba(6,182,212,0.2)] z-50 flex flex-col gap-1">
+                      <div className="px-3 py-2 border-b border-cyan-500/10 mb-1 flex justify-between items-center">
+                        <p className="text-[9px] font-mono tracking-wider text-cyan-500/50 uppercase">Switch Node</p>
+                        <button 
+                          onClick={handleResetWorkflow}
+                          title="Reset Workflow State"
+                          className="text-cyan-500/40 hover:text-cyan-300 transition-colors p-1 hover:bg-cyan-500/10 rounded cursor-pointer"
+                        >
+                          <RefreshCw className="h-3 w-3" />
+                        </button>
+                      </div>
+                      <button 
+                        onClick={() => handleSelectRole('employer')}
+                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-left font-mono text-[11px] border transition-all duration-200 cursor-pointer ${
+                          role === 'employer' 
+                            ? 'bg-purple-500/20 text-purple-300 border-purple-500/40 shadow-[0_0_10px_rgba(168,85,247,0.2)] font-bold' 
+                            : 'hover:bg-purple-500/10 text-purple-400 border-transparent hover:border-purple-500/30'
+                        }`}
+                      >
+                        <span className="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></span>
+                        EMPLOYER_NODE
+                      </button>
+                      <button 
+                        onClick={() => handleSelectRole('employee')}
+                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-left font-mono text-[11px] border transition-all duration-200 cursor-pointer ${
+                          role === 'employee' 
+                            ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 shadow-[0_0_10px_rgba(34,211,238,0.2)] font-bold' 
+                            : 'hover:bg-cyan-500/10 text-cyan-400 border-transparent hover:border-cyan-500/30'
+                        }`}
+                      >
+                        <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse"></span>
+                        EMPLOYEE_NODE
+                      </button>
+                      <button 
+                        onClick={() => handleSelectRole('treasurer')}
+                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-left font-mono text-[11px] border transition-all duration-200 cursor-pointer ${
+                          role === 'treasurer' 
+                            ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-[0_0_10px_rgba(16,185,129,0.2)] font-bold' 
+                            : 'hover:bg-emerald-500/10 text-emerald-400 border-transparent hover:border-emerald-500/30'
+                        }`}
+                      >
+                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        TREASURER_NODE
+                      </button>
+                    </div>
+                  )}
                 </div>
 
-                <Button variant="ghost" size="icon" onClick={handleLogout} title="DISCONNECT" className="text-cyan-500/50 hover:text-cyan-300 hover:bg-cyan-500/10">
-                  <LogOut className="h-5 w-5" />
+                <Button variant="ghost" onClick={handleLogout} title="DISCONNECT" className="flex items-center gap-2 text-[10px] font-mono tracking-widest uppercase border border-cyan-500/30 text-cyan-500 hover:text-cyan-300 hover:bg-cyan-500/10 cursor-pointer px-3 h-8 rounded-lg shadow-[0_0_15px_rgba(6,182,212,0.1)] transition-all duration-300">
+                  <LogOut className="h-4 w-4" />
+                  Logout
                 </Button>
               </>
             ) : (
-              <div className="flex items-center space-x-4">
-                <div className="text-[10px] font-mono tracking-widest text-cyan-500/50 flex items-center gap-2 uppercase">
-                  <Code className="h-4 w-4 text-cyan-500/40"/> Connect to Fhenix
-                </div>
+              <div className="relative">
+                <Button 
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  className="flex items-center gap-2 bg-gradient-to-r from-cyan-500/20 to-purple-600/20 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/10 font-mono text-[10px] tracking-widest uppercase rounded-lg px-4 h-10 shadow-[0_0_15px_rgba(6,182,212,0.1)] transition-all duration-300 cursor-pointer"
+                >
+                  <Wallet className="h-4 w-4 text-cyan-400 animate-pulse" />
+                  Secure Web3 Wallet Connect
+                  <ChevronDown className="h-3 w-3 text-cyan-500" />
+                </Button>
+                
+                {isDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-56 rounded-xl border border-cyan-500/30 bg-black/90 p-2 backdrop-blur-2xl shadow-[0_10px_30px_rgba(6,182,212,0.2)] z-50 flex flex-col gap-1">
+                    <div className="px-3 py-2 border-b border-cyan-500/10 mb-1">
+                      <p className="text-[9px] font-mono tracking-wider text-cyan-500/50 uppercase">Select Secure Node</p>
+                    </div>
+                    <button 
+                      onClick={() => handleSelectRole('employer')}
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-purple-500/10 text-left font-mono text-[11px] text-purple-300 border border-transparent hover:border-purple-500/30 transition-all duration-200 cursor-pointer"
+                    >
+                      <span className="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></span>
+                      EMPLOYER_NODE
+                    </button>
+                    <button 
+                      onClick={() => handleSelectRole('employee')}
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-cyan-500/10 text-left font-mono text-[11px] text-cyan-300 border border-transparent hover:border-cyan-500/30 transition-all duration-200 cursor-pointer"
+                    >
+                      <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse"></span>
+                      EMPLOYEE_NODE
+                    </button>
+                    <button 
+                      onClick={() => handleSelectRole('treasurer')}
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-emerald-500/10 text-left font-mono text-[11px] text-emerald-300 border border-transparent hover:border-emerald-500/30 transition-all duration-200 cursor-pointer"
+                    >
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                      TREASURER_NODE
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </nav>

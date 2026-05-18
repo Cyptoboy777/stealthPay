@@ -71,7 +71,7 @@ export default function Home() {
           <span className="font-bold">SYSTEM_ONLINE // STEALTHPAY CoFHE</span>
         </motion.div>
         
-        <h1 className="text-7xl md:text-8xl lg:text-9xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-white via-cyan-100 to-purple-500 drop-shadow-[0_0_40px_rgba(168,85,247,0.5)] leading-none pb-2">
+        <h1 className="text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-white via-cyan-100 to-purple-500 drop-shadow-[0_0_40px_rgba(168,85,247,0.5)] leading-tight pb-6">
           CONFIDENTIAL
           <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400 drop-shadow-[0_0_30px_rgba(34,211,238,0.6)]">PAYROLL_PROTOCOL</span>

@@ -16,9 +16,10 @@ const mockChartData = Array.from({ length: 20 }).map((_, i) => ({
 
 export default function EmployerDashboard() {
   const [isUploading, setIsUploading] = useState(false);
-  const [uploaded, setUploaded] = useState(false);
-  const [signature, setSignature] = useState<string | null>(null);
-  const { signer } = useWeb3();
+  const { signer, payrollState, setPayrollState, employerSignature, setEmployerSignature } = useWeb3();
+
+  const uploaded = payrollState !== 'idle';
+  const signature = employerSignature;
 
   const handleUpload = async () => {
     if (!signer) {
@@ -29,8 +30,8 @@ export default function EmployerDashboard() {
     try {
       const message = "STEALTHPAY: Authorize encrypted payroll batch dispatch for processing on Fhenix testnet. Payload: [ENCRYPTED_CSV_HASH_XYZ123]";
       const sig = await signer.signMessage(message);
-      setSignature(sig);
-      setUploaded(true);
+      setEmployerSignature(sig);
+      setPayrollState('uploaded');
     } catch (error) {
       console.error("Encryption/Signing rejected", error);
     } finally {

@@ -10,21 +10,26 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export default function TreasuryVault() {
   const [approving, setApproving] = useState(false);
-  const [approved, setApproved] = useState(false);
-  const [signature, setSignature] = useState<string | null>(null);
-  const { signer } = useWeb3();
+  const { signer, payrollState, setPayrollState, treasurerSignature, setTreasurerSignature } = useWeb3();
+
+  const approved = payrollState === 'approved' || payrollState === 'claimed';
+  const signature = treasurerSignature;
 
   const handleApprove = async () => {
     if (!signer) {
       alert("Please connect your hardware wallet or signer account.");
       return;
     }
+    if (payrollState === 'idle') {
+      alert("No pending payroll batch uploaded yet. Please switch to the Employer Node first to initiate a batch upload!");
+      return;
+    }
     setApproving(true);
     try {
       const msg = "Sign FHE encrypted payload to approve Batch Payroll #BP_0991.";
       const sig = await signer.signMessage(msg);
-      setSignature(sig);
-      setApproved(true);
+      setTreasurerSignature(sig);
+      setPayrollState('approved');
     } catch (err) {
       console.error(err);
     } finally {
