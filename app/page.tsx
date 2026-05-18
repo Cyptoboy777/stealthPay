@@ -97,45 +97,104 @@ export default function Home() {
             </button>
         </motion.div>
 
-        {/* Floating Encrypted Dashboard Panels Simulation */}
-        <div className="pt-8 flex flex-wrap justify-center gap-6 text-left perspective-1000">
-           <motion.div 
-             animate={{ y: [0, -15, 0], rotateX: [5, 10, 5], rotateY: [-5, 0, -5] }}
-             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-             className="bg-purple-950/40 backdrop-blur-2xl border border-purple-500/50 p-5 rounded-2xl shadow-[0_20px_50px_rgba(168,85,247,0.2),inset_0_0_20px_rgba(168,85,247,0.1)] w-72 relative overflow-hidden transform-gpu"
-           >
-             <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-purple-400 to-transparent"></div>
-             <p className="text-purple-300 text-xs font-mono mb-2 flex items-center gap-2 tracking-widest"><Lock className="w-4 h-4"/> ENCRYPTED_STATE</p>
-             <p className="text-purple-50 font-mono text-2xl overflow-hidden whitespace-nowrap border-r-[3px] border-purple-400 animate-[typing_2s_steps(20,end)_infinite]">
-               0x8A4B29E3...
-             </p>
-           </motion.div>
+        {/* Ecosystem Architecture - Interactive Login Portals */}
+        <div className="pt-16 w-full max-w-6xl mx-auto space-y-8 text-left relative z-20" style={{ pointerEvents: 'auto' }}>
+           <div className="text-center mb-8">
+              <h2 className="font-mono text-xl md:text-2xl font-black text-white tracking-widest uppercase">Select Node & Connect Web3 Wallet</h2>
+              <p className="text-cyan-500/60 font-mono text-xs tracking-widest mt-2">StealthPay Network Architecture</p>
+           </div>
            
-           <motion.div 
-             animate={{ y: [0, 15, 0], rotateX: [-5, 0, -5], rotateY: [5, 10, 5] }}
-             transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-             className="bg-cyan-950/40 backdrop-blur-2xl border border-cyan-500/50 p-5 rounded-2xl shadow-[0_20px_50px_rgba(6,182,212,0.2),inset_0_0_20px_rgba(6,182,212,0.1)] w-72 relative overflow-hidden hidden md:block transform-gpu"
-           >
-             <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent"></div>
-             <p className="text-cyan-300 text-xs font-mono mb-2 flex items-center gap-2 tracking-widest"><Cpu className="w-4 h-4"/> FHE_BATCH_PAYLOAD</p>
-             <p className="text-cyan-50 font-mono text-2xl blur-[2px] hover:blur-none transition-all duration-300 select-none tracking-widest">
-               eU$*******
-             </p>
-           </motion.div>
+           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 perspective-1000">
+              <Card 
+                onClick={() => handleConnect('employer')}
+                className="group relative bg-[#060410]/80 backdrop-blur-2xl border border-purple-500/30 hover:border-purple-400/80 hover:-translate-y-2 hover:shadow-[0_30px_60px_rgba(168,85,247,0.3)] transition-all duration-500 overflow-hidden shadow-[0_20px_40px_rgba(0,0,0,0.5)] cursor-pointer pointer-events-auto"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 via-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-3xl group-hover:bg-purple-500/30 transition-colors duration-500"></div>
+                
+                <CardHeader className="relative z-10 p-6">
+                  <div className="h-12 w-12 rounded-xl bg-[#0a0514] border border-purple-500/40 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-[inset_0_0_20px_rgba(168,85,247,0.2)]">
+                    <Users className="h-6 w-6 text-purple-400 group-hover:text-purple-300 transition-colors" />
+                  </div>
+                  <CardTitle className="text-xl text-purple-50 font-black font-mono tracking-tighter">ROOT_EMPLOYER</CardTitle>
+                  <CardDescription className="text-purple-200/50 leading-relaxed mt-2 font-mono text-[10px]">Init encrypted batch payloads & manage stealth roster without exposing burn rate.</CardDescription>
+                </CardHeader>
+              </Card>
+
+              <Card 
+                onClick={() => handleConnect('employee')}
+                className="group relative bg-[#020813]/80 backdrop-blur-2xl border border-cyan-500/30 hover:border-cyan-400/80 hover:-translate-y-2 hover:shadow-[0_30px_60px_rgba(6,182,212,0.3)] transition-all duration-500 overflow-hidden shadow-[0_20px_40px_rgba(0,0,0,0.5)] cursor-pointer pointer-events-auto"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 via-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/10 rounded-full blur-3xl group-hover:bg-cyan-500/30 transition-colors duration-500"></div>
+
+                <CardHeader className="relative z-10 p-6">
+                  <div className="h-12 w-12 rounded-xl bg-[#030d1a] border border-cyan-500/40 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:-rotate-6 transition-all duration-500 shadow-[inset_0_0_20px_rgba(6,182,212,0.2)]">
+                    <Lock className="h-6 w-6 text-cyan-400 group-hover:text-cyan-300 transition-colors" />
+                  </div>
+                  <CardTitle className="text-xl text-cyan-50 font-black font-mono tracking-tighter">USER_WALLET</CardTitle>
+                  <CardDescription className="text-cyan-200/50 leading-relaxed mt-2 font-mono text-[10px]">Decrypt incoming streams. Zero-knowledge access to your personal payout vault.</CardDescription>
+                </CardHeader>
+              </Card>
+
+              <Card 
+                onClick={() => handleConnect('treasurer')}
+                className="group relative bg-[#020a06]/80 backdrop-blur-2xl border border-emerald-500/30 hover:border-emerald-400/80 hover:-translate-y-2 hover:shadow-[0_30px_60px_rgba(16,185,129,0.3)] transition-all duration-500 overflow-hidden shadow-[0_20px_40px_rgba(0,0,0,0.5)] cursor-pointer pointer-events-auto"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 via-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl group-hover:bg-emerald-500/30 transition-colors duration-500"></div>
+
+                <CardHeader className="relative z-10 p-6">
+                  <div className="h-12 w-12 rounded-xl bg-[#04120a] border border-emerald-500/40 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-[inset_0_0_20px_rgba(16,185,129,0.2)]">
+                    <Vault className="h-6 w-6 text-emerald-400 group-hover:text-emerald-300 transition-colors" />
+                  </div>
+                  <CardTitle className="text-xl text-emerald-50 font-black font-mono tracking-tighter">MULTI_SIG_OPS</CardTitle>
+                  <CardDescription className="text-emerald-200/50 leading-relaxed mt-2 font-mono text-[10px]">Approve FHE computes & encrypted state changes. Prove solvency without exposure.</CardDescription>
+                </CardHeader>
+              </Card>
+           </div>
            
-           <motion.div 
-             animate={{ y: [0, -10, 0], rotateZ: [-2, 2, -2] }}
-             transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
-             className="bg-emerald-950/40 backdrop-blur-2xl border border-emerald-500/50 p-5 rounded-2xl shadow-[0_20px_50px_rgba(16,185,129,0.2),inset_0_0_20px_rgba(16,185,129,0.1)] w-72 relative overflow-hidden hidden lg:block transform-gpu"
-           >
-             <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-emerald-400 to-transparent"></div>
-             <p className="text-emerald-300 text-xs font-mono mb-2 flex items-center gap-2 tracking-widest"><Activity className="w-4 h-4"/> PRIVACY_BUDGET</p>
-             <div className="h-8 flex items-center gap-1.5 mt-2">
-               {[1,2,3,4,5,6,7,8].map(i => (
-                 <div key={i} className="h-full w-2 bg-emerald-400 animate-[pulse_1.5s_infinite]" style={{ animationDelay: `${i * 0.1}s`, opacity: 0.8 }}></div>
-               ))}
-             </div>
-           </motion.div>
+           <div className="w-full max-w-7xl mt-16 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center bg-[#05070A]/80 backdrop-blur-2xl text-white p-8 md:p-12 rounded-[2rem] border border-cyan-500/20 shadow-[0_30px_100px_rgba(6,182,212,0.1)] relative overflow-hidden mx-auto">
+              <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-[100px] pointer-events-none" />
+              <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-cyan-500/5 rounded-full blur-[100px] pointer-events-none" />
+
+              <div className="space-y-6 relative z-10">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 uppercase tracking-widest shadow-[0_0_15px_rgba(16,185,129,0.2)] font-mono">
+                  ZK_COMPLIANCE_ACTIVE
+                </span>
+                <h3 className="text-3xl md:text-4xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white to-cyan-200">
+                  Privacy-by-Design <br/> From Genesis Block
+                </h3>
+                <p className="text-cyan-100/60 leading-relaxed font-light text-sm max-w-xl">
+                  No more strategy leaks or MEV extraction from your treasury operations. Utilize Fhenix CoFHE for full
+                  homomorphic encryption computations. Salaries are processed securely and only intended recipients can decrypt them.
+                </p>
+                <div className="flex flex-wrap gap-4 pt-4">
+                  <div className="flex items-center gap-2 text-xs text-cyan-300 font-mono bg-cyan-950/30 px-3 py-1.5 rounded-lg border border-cyan-500/20">
+                     <ShieldCheck className="w-4 h-4 text-emerald-400" /> ZK_PROOFS
+                  </div>
+                  <div className="flex items-center gap-2 text-xs text-purple-300 font-mono bg-purple-950/30 px-3 py-1.5 rounded-lg border border-purple-500/20">
+                     <Cpu className="w-4 h-4 text-purple-400" /> FHE_COPROCESSOR
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-[#02050A] p-6 rounded-2xl font-mono text-xs leading-relaxed border border-cyan-500/30 shadow-[inset_0_0_30px_rgba(6,182,212,0.05)] relative overflow-hidden h-full flex flex-col justify-center text-left">
+                <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent,transparent_2px,rgba(6,182,212,0.03)_2px,rgba(6,182,212,0.03)_4px)] pointer-events-none"></div>
+                
+                <div className="flex items-center gap-2 mb-4 border-b border-cyan-500/20 pb-3">
+                  <Terminal className="w-4 h-4 text-cyan-500/60" />
+                  <span className="text-cyan-500/60 uppercase tracking-widest text-[10px]">Fhenix_Smart_Contract.sol</span>
+                </div>
+
+                <p className="text-slate-500/80 mb-2">{`// Secure Payroll FHE Execution`}</p>
+                <p className="text-cyan-300 mb-1"><span className="text-purple-400">euint256</span> employeeSalary = FHE.asEuint256(encryptedInput);</p>
+                <p className="text-cyan-300 mb-1"><span className="text-purple-400">euint256</span> taxAmount = employeeSalary.mul(taxRate);</p>
+                <p className="text-cyan-300 mb-3"><span className="text-purple-400">euint256</span> netPayout = employeeSalary.sub(taxAmount);</p>
+                <p className="text-emerald-500/60 mt-3">{`// State transitions resolved strictly in ciphertext`}</p>
+                <p className="text-emerald-500/60">{`// Compliance verifications via zk-SNARKs`}</p>
+              </div>
+           </div>
         </div>
       </motion.div>
 
