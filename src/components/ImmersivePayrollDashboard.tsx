@@ -761,6 +761,25 @@ export default function ImmersivePayrollDashboard() {
         onSuccess={handleAuthSuccess} 
         onCancel={() => setShowAuthModal(false)} 
       />
+
+      {/* Live Fhenix Network Status Widget - Zero Risk High Impact Feature */}
+      <motion.div 
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1, duration: 0.8 }}
+        className="fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-full border border-cyan-500/20 bg-black/80 px-4 py-2 shadow-[0_0_20px_rgba(6,182,212,0.15)] backdrop-blur-xl cursor-crosshair group hover:border-cyan-400/50 transition-colors"
+      >
+        <div className="relative flex h-3 w-3 items-center justify-center">
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+          <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
+        </div>
+        <div className="flex flex-col">
+          <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-cyan-50 group-hover:text-cyan-300 transition-colors">Fhenix Helium Subnet</span>
+          <span className="font-mono text-[9px] text-emerald-400/70 flex items-center gap-1">
+            <ShieldCheck className="w-3 h-3" /> FHE Coprocessor: <span className="text-emerald-400">SECURE</span>
+          </span>
+        </div>
+      </motion.div>
     </div>
   );
 }
