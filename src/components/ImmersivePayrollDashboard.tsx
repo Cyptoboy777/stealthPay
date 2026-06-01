@@ -556,7 +556,7 @@ export default function ImmersivePayrollDashboard() {
   const handleAuthSuccess = async () => {
     setShowAuthModal(false);
     toast.promise(
-      signMessageAsync({ message: 'Decrypt my FHE payroll buffer for epoch 92: StealthPay' } as any),
+      signMessageAsync({ account: walletAddress as `0x${string}`, message: 'Decrypt my FHE payroll buffer for epoch 92: StealthPay' }),
       {
         loading: 'Decrypting FHE ciphertexts...',
         success: () => {
@@ -575,7 +575,7 @@ export default function ImmersivePayrollDashboard() {
     }
     setIsClaiming(true);
     toast.promise(
-      signMessageAsync({ message: 'Authorizing claim of encrypted assets to my wallet via Privara route.' }),
+      signMessageAsync({ account: walletAddress as `0x${string}`, message: 'Authorizing claim of encrypted assets to my wallet via Privara route.' }),
       {
         loading: 'Generating Zero-Knowledge proofs...',
         success: (sig) => {

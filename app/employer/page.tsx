@@ -19,7 +19,7 @@ const mockChartData = Array.from({ length: 20 }).map((_, i) => ({
 export default function EmployerDashboard() {
   const [isUploading, setIsUploading] = useState(false);
   
-  const { isConnected } = useAccount();
+  const { address, isConnected } = useAccount();
   const { signMessageAsync } = useSignMessage();
   const { payrollState, setPayrollState, employerSignature, setEmployerSignature } = usePayrollStore();
 
@@ -34,7 +34,7 @@ export default function EmployerDashboard() {
     setIsUploading(true);
     try {
       const message = "STEALTHPAY: Authorize encrypted payroll batch dispatch for processing on Fhenix testnet. Payload: [ENCRYPTED_CSV_HASH_XYZ123]";
-      const sig = await signMessageAsync({ message } as any);
+      const sig = await signMessageAsync({ account: address as `0x${string}`, message });
       setEmployerSignature(sig);
       setPayrollState('uploaded');
       toast.success("Payload Encrypted", { description: "Batch successfully dispatched to Treasury." });

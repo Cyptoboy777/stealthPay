@@ -13,7 +13,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 export default function TreasuryVault() {
   const [approving, setApproving] = useState(false);
   
-  const { isConnected } = useAccount();
+  const { address, isConnected } = useAccount();
   const { signMessageAsync } = useSignMessage();
   const { payrollState, setPayrollState, treasurerSignature, setTreasurerSignature } = usePayrollStore();
 
@@ -32,7 +32,7 @@ export default function TreasuryVault() {
     setApproving(true);
     try {
       const msg = "Sign FHE encrypted payload to approve Batch Payroll #BP_0991.";
-      const sig = await signMessageAsync({ message: msg } as any);
+      const sig = await signMessageAsync({ account: address as `0x${string}`, message: msg });
       setTreasurerSignature(sig);
       setPayrollState('approved');
       toast.success("Multisig Authorized", { description: "Batch #BP_0991 successfully approved." });
