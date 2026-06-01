@@ -42,9 +42,9 @@ export default function Home() {
       <div className="relative z-10 mx-auto max-w-6xl px-6 pt-32 pb-24">
         {/* Navigation / Header */}
         <nav className="absolute top-0 left-0 right-0 flex items-center justify-between p-6 z-20">
-          <div className="flex items-center">
-            <img src="/logo.png" alt="StealthPay Logo" className="h-8 w-auto object-contain" />
-          </div>
+          <Link href="/walkthrough" className="flex items-center group">
+            <img src="/logo.png" alt="StealthPay Logo" className="h-14 w-auto object-contain transition-all duration-300 group-hover:scale-105 drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]" />
+          </Link>
           <div className="text-xs text-zinc-500 font-mono">
             V3 / Fhenix
           </div>

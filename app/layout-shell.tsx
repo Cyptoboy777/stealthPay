@@ -52,8 +52,8 @@ export function LayoutShell({ children }: { children: React.ReactNode }) {
         <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-50" />
         
         <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-8">
-          <Link href="/" className="flex items-center space-x-3 group">
-            <img src="/logo.png" alt="StealthPay Logo" className="h-10 w-auto object-contain transition-transform group-hover:scale-105" />
+          <Link href="/walkthrough" className="flex items-center space-x-3 group">
+            <img src="/logo.png" alt="StealthPay Logo" className="h-16 w-auto object-contain transition-all duration-300 group-hover:scale-105 drop-shadow-[0_0_10px_rgba(6,182,212,0.3)]" />
           </Link>
           
           <nav className="flex items-center space-x-4" ref={dropdownRef}>
