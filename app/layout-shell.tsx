@@ -53,13 +53,7 @@ export function LayoutShell({ children }: { children: React.ReactNode }) {
         
         <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-8">
           <Link href="/" className="flex items-center space-x-3 group">
-            <div className="relative w-8 h-8 flex items-center justify-center">
-              <Hexagon className="absolute inset-0 w-full h-full text-cyan-500/30 group-hover:text-cyan-400 transition-colors drop-shadow-[0_0_15px_rgba(6,182,212,0.5)] animate-[spin_4s_linear_infinite]" />
-              <Shield className="h-4 w-4 relative z-10 text-cyan-50 drop-shadow-[0_0_8px_rgba(255,255,255,0.8)] animate-pulse" />
-            </div>
-            <span className="text-xl font-bold tracking-widest text-cyan-100 font-mono uppercase group-hover:text-cyan-300 transition-colors">
-              Stealth<span className="text-cyan-500">PAY</span>
-            </span>
+            <img src="/logo.png" alt="StealthPay Logo" className="h-10 w-auto object-contain transition-transform group-hover:scale-105" />
           </Link>
           
           <nav className="flex items-center space-x-4" ref={dropdownRef}>
