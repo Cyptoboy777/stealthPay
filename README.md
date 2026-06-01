@@ -6,6 +6,13 @@
 
 ---
 
+## 🎥 Live Demo & Walkthrough
+
+- **Live Vercel Deployment:** [https://stealthpay-app-livid.vercel.app/](https://stealthpay-app-livid.vercel.app/)
+- **Demo Video:** [Watch on YouTube](https://youtu.be/qKEswMDTh3o?si=RVBtLOQEpXTHF0XP)
+
+---
+
 ## 🛑 The Institutional Gap
 Most protocols are architected for transparency by default. That architectural decision defines the user base. Institutions with compliance requirements, treasuries protecting cash flow strategies, and DAOs handling sensitive payroll **can't use transparent rails.** Not won't. *Can't.*
 
