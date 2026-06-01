@@ -34,7 +34,7 @@ export default function EmployerDashboard() {
     setIsUploading(true);
     try {
       const message = "STEALTHPAY: Authorize encrypted payroll batch dispatch for processing on Fhenix testnet. Payload: [ENCRYPTED_CSV_HASH_XYZ123]";
-      const sig = await signMessageAsync({ message });
+      const sig = await signMessageAsync({ message } as any);
       setEmployerSignature(sig);
       setPayrollState('uploaded');
       toast.success("Payload Encrypted", { description: "Batch successfully dispatched to Treasury." });

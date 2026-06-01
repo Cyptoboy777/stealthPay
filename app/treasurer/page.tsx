@@ -32,7 +32,7 @@ export default function TreasuryVault() {
     setApproving(true);
     try {
       const msg = "Sign FHE encrypted payload to approve Batch Payroll #BP_0991.";
-      const sig = await signMessageAsync({ message: msg });
+      const sig = await signMessageAsync({ message: msg } as any);
       setTreasurerSignature(sig);
       setPayrollState('approved');
       toast.success("Multisig Authorized", { description: "Batch #BP_0991 successfully approved." });
