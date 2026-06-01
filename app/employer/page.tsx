@@ -6,7 +6,9 @@ import { Button } from '@/src/components/ui/Button';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/src/components/ui/Table';
 import { ShieldAlert, Upload, Users, CheckCircle2, Activity, Cpu, Lock } from 'lucide-react';
 import { Badge } from '@/src/components/ui/Badge';
-import { useWeb3 } from '@/src/lib/Web3Context';
+import { usePayrollStore } from '@/src/store/usePayrollStore';
+import { useSignMessage, useAccount } from 'wagmi';
+import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AreaChart, Area, ResponsiveContainer } from 'recharts';
 
@@ -16,24 +18,29 @@ const mockChartData = Array.from({ length: 20 }).map((_, i) => ({
 
 export default function EmployerDashboard() {
   const [isUploading, setIsUploading] = useState(false);
-  const { signer, payrollState, setPayrollState, employerSignature, setEmployerSignature } = useWeb3();
+  
+  const { isConnected } = useAccount();
+  const { signMessageAsync } = useSignMessage();
+  const { payrollState, setPayrollState, employerSignature, setEmployerSignature } = usePayrollStore();
 
   const uploaded = payrollState !== 'idle';
   const signature = employerSignature;
 
   const handleUpload = async () => {
-    if (!signer) {
-      alert("Please connect wallet first.");
+    if (!isConnected) {
+      toast.error("Wallet Disconnected", { description: "Please connect your wallet first." });
       return;
     }
     setIsUploading(true);
     try {
       const message = "STEALTHPAY: Authorize encrypted payroll batch dispatch for processing on Fhenix testnet. Payload: [ENCRYPTED_CSV_HASH_XYZ123]";
-      const sig = await signer.signMessage(message);
+      const sig = await signMessageAsync({ message });
       setEmployerSignature(sig);
       setPayrollState('uploaded');
+      toast.success("Payload Encrypted", { description: "Batch successfully dispatched to Treasury." });
     } catch (error) {
       console.error("Encryption/Signing rejected", error);
+      toast.error("Operation Failed", { description: "Signature rejected or encryption failed." });
     } finally {
       setIsUploading(false);
     }

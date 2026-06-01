@@ -5,33 +5,40 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/src
 import { Button } from '@/src/components/ui/Button';
 import { Badge } from '@/src/components/ui/Badge';
 import { Fingerprint, CheckCircle2, ShieldCheck, FileCheck, Loader2, Vault, Database, Shield } from 'lucide-react';
-import { useWeb3 } from '@/src/lib/Web3Context';
+import { usePayrollStore } from '@/src/store/usePayrollStore';
+import { useSignMessage, useAccount } from 'wagmi';
+import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function TreasuryVault() {
   const [approving, setApproving] = useState(false);
-  const { signer, payrollState, setPayrollState, treasurerSignature, setTreasurerSignature } = useWeb3();
+  
+  const { isConnected } = useAccount();
+  const { signMessageAsync } = useSignMessage();
+  const { payrollState, setPayrollState, treasurerSignature, setTreasurerSignature } = usePayrollStore();
 
   const approved = payrollState === 'approved' || payrollState === 'claimed';
   const signature = treasurerSignature;
 
   const handleApprove = async () => {
-    if (!signer) {
-      alert("Please connect your hardware wallet or signer account.");
+    if (!isConnected) {
+      toast.error("Wallet Disconnected", { description: "Please connect your hardware wallet or signer account." });
       return;
     }
     if (payrollState === 'idle') {
-      alert("No pending payroll batch uploaded yet. Please switch to the Employer Node first to initiate a batch upload!");
+      toast.warning("No Pending Batch", { description: "No pending payroll batch uploaded yet." });
       return;
     }
     setApproving(true);
     try {
       const msg = "Sign FHE encrypted payload to approve Batch Payroll #BP_0991.";
-      const sig = await signer.signMessage(msg);
+      const sig = await signMessageAsync({ message: msg });
       setTreasurerSignature(sig);
       setPayrollState('approved');
+      toast.success("Multisig Authorized", { description: "Batch #BP_0991 successfully approved." });
     } catch (err) {
       console.error(err);
+      toast.error("Approval Failed", { description: "Signature rejected or error occurred." });
     } finally {
       setApproving(false);
     }

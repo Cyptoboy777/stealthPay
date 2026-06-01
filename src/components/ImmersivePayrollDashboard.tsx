@@ -8,6 +8,10 @@ import { BlendFunction } from 'postprocessing';
 import * as THREE from 'three';
 import { motion } from 'framer-motion';
 import { ethers } from 'ethers';
+import { Eye, EyeOff, Lock, ChevronRight, Fingerprint, Activity, Clock, FileCheck, ArrowRight, Wallet, CheckCircle2, Bot, Sparkles as SparklesIcon, Cpu, ShieldCheck, Terminal, Upload, Coins, BarChart3, HelpCircle, Loader2 } from 'lucide-react';
+import { usePayrollStore } from '@/src/store/usePayrollStore';
+import { useAccount, useBalance, useSignMessage } from 'wagmi';
+import { toast } from 'sonner';
 import PasskeyAuthModal from '@/src/components/PasskeyAuthModal';
 import {
   Area,
@@ -24,33 +28,21 @@ import {
   YAxis,
 } from 'recharts';
 import {
-  Bot,
-  BrainCircuit,
-  CheckCircle2,
-  ChevronRight,
   CircleDollarSign,
   DatabaseZap,
-  Fingerprint,
   Gauge,
   Landmark,
   LockKeyhole,
   PiggyBank,
   Send,
-  ShieldCheck,
   SlidersHorizontal,
-  Sparkles as SparklesIcon,
-  Terminal,
   Users,
   Vault,
-  Wallet,
-  Cpu,
-  Lock,
   type LucideIcon,
 } from 'lucide-react';
 
 import { Button } from '@/src/components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/Card';
-import { useWeb3 } from '@/src/lib/Web3Context';
 
 type SplitKey = 'main' | 'savings' | 'yield';
 
@@ -209,20 +201,20 @@ function MetricCard({
   detail,
   tone,
 }: {
-  icon: LucideIcon;
+  icon: any;
   label: string;
   value: string;
   detail: string;
   tone: string;
 }) {
   return (
-    <div className={`rounded-lg border ${tone} bg-black/36 p-4 backdrop-blur-xl`}>
+    <div className={`rounded-xl border border-white/5 bg-[#0A0A0A]/50 p-5 backdrop-blur-md`}>
       <div className="flex items-center justify-between gap-3">
-        <p className="font-mono text-[10px] uppercase tracking-widest text-cyan-100/56">{label}</p>
-        <Icon className="h-4 w-4 text-cyan-200/70" />
+        <p className="text-xs font-medium text-zinc-500">{label}</p>
+        <Icon className="h-4 w-4 text-zinc-600" />
       </div>
-      <p className="mt-3 font-mono text-2xl font-black text-white">{value}</p>
-      <p className="mt-1 text-xs text-cyan-100/48">{detail}</p>
+      <p className="mt-4 text-3xl font-semibold tracking-[-0.04em] text-white">{value}</p>
+      <p className="mt-1 text-xs text-zinc-500 font-light">{detail}</p>
     </div>
   );
 }
@@ -249,28 +241,28 @@ function SplitterPanel({
   }));
 
   return (
-    <Card className="rounded-lg border-cyan-500/24 bg-[#020813]/86 shadow-[0_0_45px_rgba(6,182,212,0.08)] backdrop-blur-2xl">
-      <CardHeader className="border-b border-cyan-500/10 pb-4">
-        <CardTitle className="flex items-center gap-2 font-mono text-base text-cyan-100">
-          <SlidersHorizontal className="h-5 w-5 text-cyan-300" />
+    <Card className="rounded-2xl border border-white/10 bg-[#0A0A0A]/80 shadow-2xl backdrop-blur-3xl overflow-hidden">
+      <CardHeader className="border-b border-white/5 pb-5 pt-6 px-6">
+        <CardTitle className="flex items-center gap-2 text-sm font-medium text-white">
+          <SlidersHorizontal className="h-4 w-4 text-zinc-400" />
           Stealth Splitter
         </CardTitle>
-        <CardDescription className="font-mono text-[10px] uppercase tracking-widest text-cyan-200/42">
-          Privara powered routing policy
+        <CardDescription className="text-xs text-zinc-500 font-light mt-1">
+          Confidential routing policy percentages
         </CardDescription>
       </CardHeader>
-      <CardContent className="grid gap-5 pt-6 lg:grid-cols-[1fr_160px]">
-        <div className="space-y-5">
+      <CardContent className="grid gap-6 p-6 lg:grid-cols-[1fr_160px]">
+        <div className="space-y-6">
           {destinations.map((item) => {
             const Icon = item.icon;
             return (
               <div key={item.key} className="space-y-2">
                 <div className="flex items-center justify-between gap-3">
-                  <span className="flex items-center gap-2 text-sm font-semibold text-cyan-50">
-                    <Icon className="h-4 w-4" style={{ color: item.color }} />
+                  <span className="flex items-center gap-2 text-sm font-medium text-zinc-300">
+                    <Icon className="h-4 w-4 text-zinc-500" />
                     {item.label}
                   </span>
-                  <span className="font-mono text-xs text-cyan-100/68">
+                  <span className="font-mono text-xs text-zinc-400">
                     {splits[item.key]}% / ${Math.round((salary * splits[item.key]) / 100).toLocaleString()}
                   </span>
                 </div>
@@ -281,28 +273,28 @@ function SplitterPanel({
                   max="100"
                   value={splits[item.key]}
                   onChange={(event) => setSplit(item.key, Number(event.target.value))}
-                  className="stealth-range w-full"
-                  style={{ accentColor: item.color }}
+                  className="w-full appearance-none h-1.5 rounded-full bg-zinc-800"
+                  style={{ accentColor: '#ffffff' }}
                 />
               </div>
             );
           })}
-          <div className="rounded-lg border border-emerald-500/24 bg-emerald-500/8 p-3 font-mono text-[11px] text-emerald-200/78">
-            <ShieldCheck className="mr-2 inline h-4 w-4 text-emerald-300" />
-            Route proof commits only percentages and destinations. Amounts stay ciphertext.
+          <div className="rounded-xl border border-white/5 bg-white/[0.02] p-3 text-xs text-zinc-400 leading-relaxed font-light">
+            <ShieldCheck className="mr-2 inline h-4 w-4 text-zinc-500" />
+            Route proof commits only percentages. Amounts stay ciphertext.
           </div>
         </div>
         <div className="h-44 min-h-44">
           <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
             <PieChart>
-              <Pie data={chartData} innerRadius={42} outerRadius={70} paddingAngle={4} dataKey="value">
-                {chartData.map((entry) => (
-                  <Cell key={entry.name} fill={entry.color} stroke="rgba(255,255,255,0.2)" />
+              <Pie data={chartData} innerRadius={50} outerRadius={70} paddingAngle={2} dataKey="value" stroke="none">
+                {chartData.map((entry, index) => (
+                  <Cell key={entry.name} fill={['#ffffff', '#a1a1aa', '#52525b'][index]} />
                 ))}
               </Pie>
               <Tooltip
-                contentStyle={{ background: '#020813', border: '1px solid rgba(34,211,238,0.25)', borderRadius: 8 }}
-                itemStyle={{ color: '#e0faff' }}
+                contentStyle={{ background: '#0A0A0A', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 12 }}
+                itemStyle={{ color: '#FAFAFA' }}
               />
             </PieChart>
           </ResponsiveContainer>
@@ -316,48 +308,48 @@ function AnalyticsPanel({ splits }: { splits: Record<SplitKey, number> }) {
   const disclosureScore = Math.min(99, 78 + Math.round(splits.savings / 4) + Math.round(splits.yield / 5));
 
   return (
-    <Card className="rounded-lg border-emerald-500/24 bg-[#03100b]/82 shadow-[0_0_45px_rgba(16,185,129,0.08)] backdrop-blur-2xl">
-      <CardHeader className="border-b border-emerald-500/10 pb-4">
-        <CardTitle className="flex items-center gap-2 font-mono text-base text-emerald-100">
-          <Gauge className="h-5 w-5 text-emerald-300" />
-          Holographic Analytics
+    <Card className="rounded-2xl border border-white/10 bg-[#0A0A0A]/80 shadow-2xl backdrop-blur-3xl overflow-hidden">
+      <CardHeader className="border-b border-white/5 pb-5 pt-6 px-6">
+        <CardTitle className="flex items-center gap-2 text-sm font-medium text-white">
+          <Gauge className="h-4 w-4 text-zinc-400" />
+          Analytics
         </CardTitle>
-        <CardDescription className="font-mono text-[10px] uppercase tracking-widest text-emerald-200/42">
-          Aggregated budget, gas savings, compliance metrics
+        <CardDescription className="text-xs text-zinc-500 font-light mt-1">
+          Aggregated budget and compliance metrics
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-5 pt-6">
-        <div className="grid grid-cols-3 gap-3">
-          <MetricCard icon={CircleDollarSign} label="Budget" value="$57k" detail="+12% encrypted" tone="border-cyan-500/20" />
-          <MetricCard icon={DatabaseZap} label="Gas Saved" value="41%" detail="AA bundling" tone="border-amber-500/20" />
-          <MetricCard icon={Fingerprint} label="Proof" value={`${disclosureScore}%`} detail="selective pass" tone="border-emerald-500/20" />
+      <CardContent className="space-y-6 p-6">
+        <div className="grid grid-cols-3 gap-4">
+          <MetricCard icon={CircleDollarSign} label="Budget" value="$57k" detail="+12% encrypted" tone="border-white/5" />
+          <MetricCard icon={DatabaseZap} label="Gas Saved" value="41%" detail="AA bundling" tone="border-white/5" />
+          <MetricCard icon={Fingerprint} label="Proof" value={`${disclosureScore}%`} detail="selective pass" tone="border-white/5" />
         </div>
         <div className="grid gap-4 lg:grid-cols-2">
-          <div className="h-52 rounded-lg border border-cyan-500/12 bg-black/28 p-3">
+          <div className="h-52 rounded-xl border border-white/5 bg-white/[0.02] p-4">
               <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <AreaChart data={analyticsData}>
                 <defs>
                   <linearGradient id="budgetGlow" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#22d3ee" stopOpacity={0.65} />
-                    <stop offset="100%" stopColor="#22d3ee" stopOpacity={0.02} />
+                    <stop offset="0%" stopColor="#FAFAFA" stopOpacity={0.2} />
+                    <stop offset="100%" stopColor="#FAFAFA" stopOpacity={0.0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid stroke="rgba(34,211,238,0.08)" vertical={false} />
-                <XAxis dataKey="month" tick={{ fill: '#67e8f9', fontSize: 10 }} axisLine={false} tickLine={false} />
+                <CartesianGrid stroke="rgba(255,255,255,0.05)" vertical={false} />
+                <XAxis dataKey="month" tick={{ fill: '#a1a1aa', fontSize: 10 }} axisLine={false} tickLine={false} />
                 <YAxis hide />
-                <Tooltip contentStyle={{ background: '#020813', border: '1px solid rgba(34,211,238,0.25)', borderRadius: 8 }} />
-                <Area type="monotone" dataKey="budget" stroke="#22d3ee" fill="url(#budgetGlow)" strokeWidth={2} />
+                <Tooltip contentStyle={{ background: '#0A0A0A', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 12 }} />
+                <Area type="monotone" dataKey="budget" stroke="#FAFAFA" fill="url(#budgetGlow)" strokeWidth={2} />
               </AreaChart>
             </ResponsiveContainer>
           </div>
-          <div className="h-52 rounded-lg border border-emerald-500/12 bg-black/28 p-3">
+          <div className="h-52 rounded-xl border border-white/5 bg-white/[0.02] p-4">
               <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <BarChart data={analyticsData}>
-                <CartesianGrid stroke="rgba(52,211,153,0.08)" vertical={false} />
-                <XAxis dataKey="month" tick={{ fill: '#6ee7b7', fontSize: 10 }} axisLine={false} tickLine={false} />
+                <CartesianGrid stroke="rgba(255,255,255,0.05)" vertical={false} />
+                <XAxis dataKey="month" tick={{ fill: '#a1a1aa', fontSize: 10 }} axisLine={false} tickLine={false} />
                 <YAxis hide />
-                <Tooltip contentStyle={{ background: '#020813', border: '1px solid rgba(52,211,153,0.25)', borderRadius: 8 }} />
-                <Bar dataKey="compliance" fill="#34d399" radius={[5, 5, 0, 0]} />
+                <Tooltip contentStyle={{ background: '#0A0A0A', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 12 }} />
+                <Bar dataKey="compliance" fill="#a1a1aa" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -420,53 +412,57 @@ function AssistantPanel({ salary, splits }: { salary: number; splits: Record<Spl
   };
 
   return (
-    <Card className="rounded-lg border-purple-500/28 bg-[#090412]/86 shadow-[0_0_45px_rgba(168,85,247,0.1)] backdrop-blur-2xl">
-      <CardHeader className="border-b border-purple-500/10 pb-4">
-        <CardTitle className="flex items-center gap-2 font-mono text-base text-purple-100">
-          <Bot className="h-5 w-5 text-purple-300" />
-          StealthPay AI Payroll Assistant
+    <Card className="rounded-2xl border border-white/10 bg-[#0A0A0A]/80 shadow-2xl backdrop-blur-3xl overflow-hidden flex flex-col h-[460px]">
+      <CardHeader className="border-b border-white/5 pb-5 pt-6 px-6">
+        <CardTitle className="flex items-center gap-2 text-sm font-medium text-white">
+          <Bot className="h-4 w-4 text-zinc-400" />
+          AI Payroll Assistant
         </CardTitle>
-        <CardDescription className="font-mono text-[10px] uppercase tracking-widest text-purple-200/42">
-          Holographic privacy and budget counsel
+        <CardDescription className="text-xs text-zinc-500 font-light mt-1">
+          Powered by Gemini 1.5
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4 pt-6">
-        <div className="h-72 space-y-3 overflow-y-auto rounded-lg border border-purple-500/14 bg-black/34 p-4">
+      <CardContent className="flex flex-col flex-1 p-6 gap-4 min-h-0">
+        <div className="flex-1 overflow-y-auto rounded-xl border border-white/5 bg-white/[0.02] p-4 space-y-4 pr-2">
           {messages.map((message) => (
-            <div key={message.id} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+            <motion.div 
+              initial={{ opacity: 0, y: 10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              key={message.id} 
+              className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+            >
               <div
-                className={`max-w-[86%] rounded-lg border px-3 py-2 text-sm leading-relaxed ${
+                className={`max-w-[86%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
                   message.role === 'user'
-                    ? 'border-cyan-500/30 bg-cyan-500/12 text-cyan-50'
-                    : 'border-purple-500/28 bg-purple-500/12 text-purple-50'
+                    ? 'bg-zinc-800 text-white'
+                    : 'bg-white/5 text-zinc-300 border border-white/5'
                 }`}
               >
                 {message.content}
               </div>
-            </div>
+            </motion.div>
           ))}
           {loading && (
-            <div className="inline-flex items-center gap-2 rounded-lg border border-purple-500/24 bg-purple-500/10 px-3 py-2 font-mono text-xs text-purple-200">
-              <BrainCircuit className="h-4 w-4 animate-pulse" />
-              StealthPay AI thinking...
+            <div className="inline-flex items-center gap-2 rounded-2xl border border-white/5 bg-white/5 px-4 py-2 text-xs text-zinc-400">
+              <Loader2 className="h-3 w-3 animate-spin" />
+              Processing...
             </div>
           )}
         </div>
-        <form onSubmit={submit} className="flex gap-2">
+        <form onSubmit={submit} className="flex gap-3 mt-auto shrink-0">
           <input
-            aria-label="Ask StealthPay AI payroll assistant"
+            aria-label="Ask AI Assistant"
             value={input}
             onChange={(event) => setInput(event.target.value)}
-            className="min-w-0 flex-1 rounded-lg border border-purple-500/24 bg-black/45 px-3 py-3 text-sm text-purple-50 outline-none transition focus:border-purple-300"
-            placeholder="Ask about salary, budget, or privacy"
+            className="flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-zinc-500 focus:bg-white/10 placeholder:text-zinc-600"
+            placeholder="Ask about salary, budget, or privacy..."
           />
           <Button
             type="submit"
             size="icon"
-            className="h-12 w-12 border border-purple-500/40 bg-purple-500/20 text-purple-100 hover:bg-purple-500/35"
-            title="Send question"
+            className="h-[46px] w-[46px] shrink-0 rounded-xl bg-white text-black hover:bg-zinc-200 transition-colors"
           >
-            <Send className="h-5 w-5" />
+            <Send className="h-4 w-4" />
           </Button>
         </form>
       </CardContent>
@@ -476,28 +472,28 @@ function AssistantPanel({ salary, splits }: { salary: number; splits: Record<Spl
 
 function CompliancePanel() {
   return (
-    <Card className="rounded-lg border-cyan-500/22 bg-[#02070d]/84 backdrop-blur-2xl">
-      <CardHeader className="border-b border-cyan-500/10 pb-4">
-        <CardTitle className="flex items-center gap-2 font-mono text-base text-cyan-100">
-          <LockKeyhole className="h-5 w-5 text-cyan-300" />
-          Smart Conditions Engine
+    <Card className="rounded-2xl border border-white/10 bg-[#0A0A0A]/80 shadow-2xl backdrop-blur-3xl overflow-hidden">
+      <CardHeader className="border-b border-white/5 pb-5 pt-6 px-6">
+        <CardTitle className="flex items-center gap-2 text-sm font-medium text-white">
+          <LockKeyhole className="h-4 w-4 text-zinc-400" />
+          Compliance Proofs
         </CardTitle>
-        <CardDescription className="font-mono text-[10px] uppercase tracking-widest text-cyan-200/42">
-          Selective disclosure proofs in progress
+        <CardDescription className="text-xs text-zinc-500 font-light mt-1">
+          Zero-knowledge selective disclosure conditions
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-3 pt-6">
+      <CardContent className="space-y-3 p-6">
         {proofRows.map((row) => (
-          <div key={row.label} className="flex items-center justify-between gap-3 rounded-lg border border-cyan-500/12 bg-black/28 p-3">
+          <div key={row.label} className="flex items-center justify-between gap-3 rounded-xl border border-white/5 bg-white/[0.02] p-4">
             <div className="flex items-center gap-3">
               <CheckCircle2
                 className={`h-4 w-4 ${
-                  row.tone === 'emerald' ? 'text-emerald-300' : row.tone === 'amber' ? 'text-amber-300' : 'text-cyan-300'
+                  row.tone === 'emerald' ? 'text-zinc-300' : row.tone === 'amber' ? 'text-zinc-400' : 'text-zinc-500'
                 }`}
               />
-              <span className="text-sm text-cyan-50/78">{row.label}</span>
+              <span className="text-sm text-zinc-300 font-light">{row.label}</span>
             </div>
-            <span className="rounded border border-cyan-500/16 px-2 py-1 font-mono text-[10px] uppercase tracking-widest text-cyan-200/62">
+            <span className="rounded-md border border-white/10 px-2 py-1 text-[10px] uppercase tracking-wider text-zinc-500 bg-white/5">
               {row.state}
             </span>
           </div>
@@ -508,15 +504,18 @@ function CompliancePanel() {
 }
 
 export default function ImmersivePayrollDashboard() {
+  const { address: walletAddress, isConnected } = useAccount();
+  const { data: balanceData } = useBalance({ address: walletAddress });
+  const { signMessageAsync } = useSignMessage();
+  const balance = balanceData ? parseFloat(balanceData.formatted).toFixed(4) : "0.0000";
+
   const { 
-    walletAddress, 
-    balance, 
-    signer, 
     payrollState, 
     setPayrollState, 
     employeeClaimHash, 
     setEmployeeClaimHash 
-  } = useWeb3();
+  } = usePayrollStore();
+
   const [mounted, setMounted] = useState(false);
   const [splits, setSplits] = useState<Record<SplitKey, number>>({ main: 55, savings: 25, yield: 20 });
   const salary = 5240;
@@ -536,16 +535,16 @@ export default function ImmersivePayrollDashboard() {
 
   const handleDecryptRequest = () => {
     if (payrollState === 'idle') {
-      alert("No payroll batch has been uploaded yet. Please act as an Employer first!");
+      toast.warning("No Payroll Batch", { description: "No payroll batch has been uploaded yet. Please act as an Employer first!" });
       return;
     }
     if (payrollState === 'uploaded') {
-      alert("The payroll batch is uploaded but awaiting Treasurer multi-sig approval. Please act as a Treasurer first to approve it!");
+      toast.warning("Pending Approval", { description: "The payroll batch is uploaded but awaiting Treasurer multi-sig approval. Please act as a Treasurer first to approve it!" });
       return;
     }
     if (!isDecrypted) {
-      if (!signer) {
-        alert('Connect wallet to decrypt balance');
+      if (!isConnected) {
+        toast.error("Wallet Disconnected", { description: "Connect wallet to decrypt balance" });
         return;
       }
       setShowAuthModal(true);
@@ -556,32 +555,45 @@ export default function ImmersivePayrollDashboard() {
 
   const handleAuthSuccess = async () => {
     setShowAuthModal(false);
-    try {
-      await signer!.signMessage('Decrypt my FHE payroll buffer for epoch 92: StealthPay');
-      setIsDecrypted(true);
-    } catch (err) {
-      console.error('User denied decryption signature', err);
-    }
+    toast.promise(
+      signMessageAsync({ message: 'Decrypt my FHE payroll buffer for epoch 92: StealthPay' }),
+      {
+        loading: 'Decrypting FHE ciphertexts...',
+        success: () => {
+          setIsDecrypted(true);
+          return 'FHE payroll buffer decrypted successfully.';
+        },
+        error: 'Decryption signature denied.',
+      }
+    );
   };
 
   const handleClaim = async () => {
-    if (!signer) {
-      alert('Please connect wallet first.');
+    if (!isConnected) {
+      toast.error("Wallet Disconnected", { description: "Please connect wallet first." });
       return;
     }
     setIsClaiming(true);
-    try {
-      const sig = await signer.signMessage('Authorizing claim of encrypted assets to my wallet via Privara route.');
-      const computedHash = ethers.keccak256(ethers.toUtf8Bytes(sig)).slice(0, 42);
-      setEmployeeClaimHash(computedHash);
-      setTimeout(() => {
-        setPayrollState('claimed');
-        setIsClaiming(false);
-      }, 3000);
-    } catch (err) {
-      console.error('User denied claim signature', err);
-      setIsClaiming(false);
-    }
+    toast.promise(
+      signMessageAsync({ message: 'Authorizing claim of encrypted assets to my wallet via Privara route.' }),
+      {
+        loading: 'Generating Zero-Knowledge proofs...',
+        success: (sig) => {
+          const computedHash = ethers.keccak256(ethers.toUtf8Bytes(String(sig))).slice(0, 42);
+          setEmployeeClaimHash(computedHash);
+          setTimeout(() => {
+            setPayrollState('claimed');
+            setIsClaiming(false);
+            toast.success("Assets Claimed", { description: "Encrypted payload routed to stealth node." });
+          }, 3000);
+          return 'ZK Proofs validated. Broadcasting transaction...';
+        },
+        error: () => {
+          setIsClaiming(false);
+          return 'Claim authorization rejected.';
+        },
+      }
+    );
   };
 
   const normalizedSplits = useMemo(() => {
@@ -594,7 +606,22 @@ export default function ImmersivePayrollDashboard() {
   }, [splits]);
 
   const setSplit = (key: SplitKey, value: number) => {
-    setSplits((current) => ({ ...current, [key]: value }));
+    setSplits((current) => {
+      const otherKeys = (Object.keys(current) as SplitKey[]).filter(k => k !== key);
+      const diff = value - current[key];
+      const remaining = current[otherKeys[0]] + current[otherKeys[1]];
+      
+      if (remaining === 0) {
+        return { ...current, [key]: value, [otherKeys[0]]: (100-value)/2, [otherKeys[1]]: (100-value)/2 };
+      }
+      
+      return {
+        ...current,
+        [key]: value,
+        [otherKeys[0]]: Math.max(0, Math.round(current[otherKeys[0]] - diff * (current[otherKeys[0]] / remaining))),
+        [otherKeys[1]]: Math.max(0, Math.round(current[otherKeys[1]] - diff * (current[otherKeys[1]] / remaining))),
+      };
+    });
   };
 
   if (!mounted) {
@@ -615,53 +642,53 @@ export default function ImmersivePayrollDashboard() {
         <div className="relative z-10 flex min-h-[520px] flex-col justify-between p-5 sm:p-8 lg:p-10">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
             <div className="flex-1">
-              <div className="mb-4 inline-flex items-center gap-2 rounded border border-cyan-500/30 bg-cyan-500/10 px-3 py-2 font-mono text-[10px] uppercase tracking-widest text-cyan-100">
-                <SparklesIcon className="h-3.5 w-3.5 text-cyan-300" />
-                Confidential salary stream online
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-[11px] font-medium tracking-wide text-zinc-300">
+                <SparklesIcon className="h-3 w-3 text-zinc-400" />
+                Confidential Salary Stream Online
               </div>
-              <h1 className="max-w-3xl text-4xl font-black tracking-tight text-white sm:text-5xl lg:text-7xl">
-                Encrypted payroll, routed into private destinations.
+              <h1 className="max-w-3xl text-5xl font-semibold tracking-[-0.03em] text-white sm:text-6xl lg:text-7xl leading-[1.1]">
+                Encrypted payroll, <br/>
+                <span className="text-zinc-500">privately routed.</span>
               </h1>
-              <p className="mt-4 max-w-2xl text-base leading-7 text-cyan-50/68 sm:text-lg">
-                Salary leaves the vault as ciphertext, passes through Privara split policy, and lands in stealth addresses
-                with proof-ready compliance controls.
+              <p className="mt-6 max-w-2xl text-lg font-light leading-relaxed text-zinc-400">
+                Salary leaves the vault as ciphertext, passes through Stealth routing policies, and lands in addresses with proof-ready compliance controls.
               </p>
             </div>
             
             {/* Decrypt & Claim Interactive Console */}
-            <div className="w-full lg:w-80 rounded-2xl border border-cyan-500/30 bg-black/60 p-6 font-mono text-xs text-cyan-100 backdrop-blur-xl shadow-[0_0_30px_rgba(6,182,212,0.15)] space-y-4">
-              <div className="flex justify-between items-center border-b border-cyan-500/10 pb-2">
-                <span className="text-cyan-400 font-bold uppercase tracking-widest text-[10px]">Secure Console</span>
-                <span className="flex items-center gap-1.5">
-                  <span className={`w-1.5 h-1.5 rounded-full ${claimed ? 'bg-emerald-400' : 'bg-amber-400 animate-pulse'}`}></span>
-                  <span className="text-[9px] uppercase tracking-wider text-cyan-500/60">{claimed ? 'SETTLED' : 'LOCKED'}</span>
+            <div className="w-full lg:w-80 rounded-2xl border border-white/10 bg-[#0A0A0A]/80 p-6 backdrop-blur-2xl shadow-xl space-y-5">
+              <div className="flex justify-between items-center border-b border-white/5 pb-3">
+                <span className="text-zinc-300 font-medium text-xs">Secure Console</span>
+                <span className="flex items-center gap-2">
+                  <span className={`w-2 h-2 rounded-full ${claimed ? 'bg-zinc-400' : 'bg-blue-500 animate-pulse'}`}></span>
+                  <span className="text-[10px] uppercase tracking-wider text-zinc-500">{claimed ? 'Settled' : 'Locked'}</span>
                 </span>
               </div>
 
-              <div className="text-[9px] font-mono tracking-widest uppercase pb-1 border-b border-cyan-500/5">
-                {payrollState === 'idle' && <span className="text-amber-500">● AWAITING_EMPLOYER_UPLOAD</span>}
-                {payrollState === 'uploaded' && <span className="text-purple-400 animate-pulse">● AWAITING_TREASURER_MULTISIG</span>}
-                {payrollState === 'approved' && <span className="text-cyan-400">● UNLOCKED / READY_TO_CLAIM</span>}
-                {payrollState === 'claimed' && <span className="text-emerald-400">● DISBURSED_TO_STEALTH_NODES</span>}
+              <div className="text-[10px] font-mono uppercase pb-2 border-b border-white/5">
+                {payrollState === 'idle' && <span className="text-zinc-400">AWAITING EMPLOYER UPLOAD</span>}
+                {payrollState === 'uploaded' && <span className="text-blue-400">AWAITING MULTISIG</span>}
+                {payrollState === 'approved' && <span className="text-zinc-300">UNLOCKED / READY</span>}
+                {payrollState === 'claimed' && <span className="text-zinc-500">DISBURSED TO NODES</span>}
               </div>
               
-              <div className="space-y-1">
-                <p className="text-[9px] text-cyan-500/40 uppercase tracking-widest">Available Salary Buffer</p>
+              <div className="space-y-1 py-2">
+                <p className="text-xs text-zinc-500 font-medium">Available Salary Buffer</p>
                 <div className="flex items-baseline gap-2">
-                  <span className={`text-3xl font-black tracking-tight ${isDecrypted ? 'text-white text-shadow-glow-cyan' : 'text-cyan-800/80'}`}>
+                  <span className={`text-4xl font-semibold tracking-[-0.04em] ${isDecrypted ? 'text-white' : 'text-zinc-700'}`}>
                     {isDecrypted ? `$${amount}` : '********'}
                   </span>
-                  <span className="text-[10px] text-cyan-500/60">USDC</span>
+                  <span className="text-xs text-zinc-500 font-medium">USDC</span>
                 </div>
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex gap-3 pt-2">
                 <Button
                   onClick={handleDecryptRequest}
-                  className={`flex-grow h-10 text-[10px] font-bold uppercase tracking-wider font-mono border rounded-lg transition-all duration-300 ${
+                  className={`flex-1 h-10 text-xs font-medium rounded-xl transition-all duration-300 ${
                     isDecrypted 
-                      ? 'border-emerald-500/40 text-emerald-400 bg-emerald-950/20 hover:bg-emerald-950/40' 
-                      : 'border-cyan-500/40 text-cyan-400 bg-cyan-950/20 hover:bg-cyan-500/10'
+                      ? 'border border-white/10 text-white bg-white/5 hover:bg-white/10' 
+                      : 'border border-white/10 text-zinc-300 bg-transparent hover:bg-white/5'
                   }`}
                 >
                   {isDecrypted ? 'Hide Balance' : 'Decrypt FHE'}
@@ -670,10 +697,10 @@ export default function ImmersivePayrollDashboard() {
                 <Button
                   onClick={handleClaim}
                   disabled={isClaiming || claimed || !isDecrypted}
-                  className={`flex-grow h-10 text-[10px] font-bold uppercase tracking-wider font-mono rounded-lg transition-all duration-300 ${
+                  className={`flex-1 h-10 text-xs font-medium rounded-xl transition-all duration-300 ${
                     isClaiming || claimed || !isDecrypted
-                      ? 'bg-cyan-950/20 border border-cyan-500/10 text-cyan-500/20 cursor-not-allowed'
-                      : 'bg-cyan-500 text-black border border-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.3)] hover:bg-cyan-400 hover:scale-105'
+                      ? 'bg-white/5 text-zinc-500 cursor-not-allowed'
+                      : 'bg-white text-black hover:scale-105'
                   }`}
                 >
                   {isClaiming ? 'Claiming...' : claimed ? 'Claimed' : 'Execute Claim'}
@@ -681,19 +708,19 @@ export default function ImmersivePayrollDashboard() {
               </div>
 
               {txHash && (
-                <div className="rounded border border-emerald-500/20 bg-emerald-500/5 p-2 font-mono text-[9px] text-emerald-400/90 space-y-1">
-                  <p className="text-emerald-500/40 uppercase tracking-widest text-[8px]">Transaction Broadcasted</p>
-                  <p className="truncate">{txHash}</p>
+                <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-[10px] text-zinc-400 space-y-1">
+                  <p className="text-zinc-500 font-medium">Transaction Broadcasted</p>
+                  <p className="truncate font-mono">{txHash}</p>
                 </div>
               )}
             </div>
           </div>
 
           <div className="grid gap-3 md:grid-cols-4">
-            <MetricCard icon={Vault} label="Cycle Salary" value="$5,240" detail="Private USDC claim" tone="border-cyan-500/22" />
-            <MetricCard icon={ShieldCheck} label="Privacy" value="FHE" detail="No raw amount exposure" tone="border-emerald-500/22" />
-            <MetricCard icon={Landmark} label="Privara" value="3 Way" detail="Stealth split policy" tone="border-amber-500/22" />
-            <MetricCard icon={Fingerprint} label="Disclosure" value="ZK" detail="Auditor safe proofs" tone="border-purple-500/22" />
+            <MetricCard icon={Vault} label="Cycle Salary" value="$5,240" detail="Private USDC claim" tone="border-white/5" />
+            <MetricCard icon={ShieldCheck} label="Privacy" value="FHE" detail="No raw amount exposure" tone="border-white/5" />
+            <MetricCard icon={Landmark} label="Privara" value="3 Way" detail="Stealth split policy" tone="border-white/5" />
+            <MetricCard icon={Fingerprint} label="Disclosure" value="ZK" detail="Auditor safe proofs" tone="border-white/5" />
           </div>
         </div>
       </section>

@@ -23,7 +23,8 @@ Perfect for DAOs, web3 startups, freelancers, and enterprises who need real priv
 
 - **Landing Experience** → Immersive 3D cyberpunk walkthrough
 - **Dashboard** → Full interactive 3D holographic interface
-- Demo Video: [Watch Here](https://youtu.be/your-demo-video) *(upload chesi link pettuko)*
+- **Live Vercel Deployment:** [https://stealthpay-wave5.vercel.app](https://stealthpay-wave5.vercel.app) *(Replace with actual Vercel domain)*
+- **Demo Video:** [Watch Here](https://youtu.be/your-demo-video) *(Upload video and replace link)*
 
 ---
 

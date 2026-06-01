@@ -1,9 +1,0 @@
-{
-  "/_not-found/page": "app/_not-found/page.js",
-  "/api/gemini-payroll/route": "app/api/gemini-payroll/route.js",
-  "/page": "app/page.js",
-  "/employee/page": "app/employee/page.js",
-  "/treasurer/page": "app/treasurer/page.js",
-  "/walkthrough/page": "app/walkthrough/page.js",
-  "/employer/page": "app/employer/page.js"
-}
