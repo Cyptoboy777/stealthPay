@@ -556,7 +556,7 @@ export default function ImmersivePayrollDashboard() {
   const handleAuthSuccess = async () => {
     setShowAuthModal(false);
     toast.promise(
-      signMessageAsync({ message: 'Decrypt my FHE payroll buffer for epoch 92: StealthPay' }),
+      signMessageAsync({ message: 'Decrypt my FHE payroll buffer for epoch 92: StealthPay' } as any),
       {
         loading: 'Decrypting FHE ciphertexts...',
         success: () => {
