@@ -8,8 +8,8 @@
 
 ## 🎥 Live Demo & Walkthrough
 
-- **Live Vercel Deployment:** [https://stealthpay-app-livid.vercel.app/](https://stealthpay-app-livid.vercel.app/)
-- **Demo Video:** [Watch on YouTube](https://youtu.be/qKEswMDTh3o?si=RVBtLOQEpXTHF0XP)
+- **Live Vercel Deployment:** [https://stealth-pay-iota.vercel.app/](https://stealth-pay-iota.vercel.app/)
+- **Demo Video:** [Watch on YouTube](https://youtu.be/mhGfpOuPU7E?si=e5GUE8PCXN3l8gl4)
 
 ---
 
