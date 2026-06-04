@@ -774,7 +774,7 @@ export default function ImmersivePayrollDashboard() {
           <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
         </div>
         <div className="flex flex-col">
-          <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-cyan-50 group-hover:text-cyan-300 transition-colors">Fhenix Helium Subnet</span>
+          <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-cyan-50 group-hover:text-cyan-300 transition-colors">Fhenix Nitrogen Testnet</span>
           <span className="font-mono text-[9px] text-emerald-400/70 flex items-center gap-1">
             <ShieldCheck className="w-3 h-3" /> FHE Coprocessor: <span className="text-emerald-400">SECURE</span>
           </span>

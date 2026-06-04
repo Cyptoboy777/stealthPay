@@ -62,13 +62,42 @@ StealthPay represents sustained technical progress and iteration across all 5 wa
 
 | Layer | Technology |
 |---|---|
-| **Encrypted Compute** | Fhenix (Helium Subnet) / CoFHE Stack |
+| **Encrypted Compute** | Fhenix (Nitrogen Testnet) / CoFHE Stack |
 | **Confidential Payments** | Privara SDK |
-| **Smart Contracts** | Solidity + FHE Library |
+| **Smart Contracts** | Solidity 0.8.25 + `@fhenixprotocol/cofhe-contracts` |
+| **FHE Operations** | `euint64`, `FHE.add`, `FHE.sub`, `FHE.allow` |
 | **Frontend Shell** | Next.js 15 (App Router) + React 19 |
 | **Blockchain Interop** | Wagmi v2 + Viem + RainbowKit |
 | **Design System** | TailwindCSS + Framer Motion + GSAP |
+| **Dev Tooling** | Hardhat 2 + `@nomicfoundation/hardhat-toolbox` |
 | **State & Toasts** | Zustand + Sonner |
+
+---
+
+## 📜 Smart Contracts
+
+Real on-chain FHE logic lives in `contracts/ConfidentialPayroll.sol`, compiled against `@fhenixprotocol/cofhe-contracts`.
+
+| Contract | Description |
+|---|---|
+| `ConfidentialPayroll.sol` | Core payroll contract using `euint64` encrypted salaries |
+
+**Key FHE operations used:**
+- `FHE.asEuint64()` — convert encrypted input from client
+- `FHE.add()` / `FHE.sub()` — arithmetic on ciphertexts (never decrypted on-chain)
+- `FHE.allow()` — grant employee permission to decrypt their own salary
+- `FHE.allowThis()` — allow contract to update its own encrypted state
+
+```bash
+# Compile smart contracts
+npx hardhat compile --config hardhat.config.cjs
+
+# Run tests
+npx hardhat test --config hardhat.config.cjs
+
+# Deploy to Fhenix Nitrogen Testnet
+npx hardhat run scripts/deploy.ts --network fhenixNitrogen --config hardhat.config.cjs
+```
 
 ---
 
