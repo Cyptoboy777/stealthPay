@@ -23,7 +23,7 @@ The $500M problem in DeFi MEV extraction and public payroll snooping isn't solve
 
 ## 🛡️ StealthPay: Privacy-by-Design on Fhenix
 
-StealthPay treats confidentiality as a cryptographic primitive. Built natively on the **Fhenix Nitrogen Testnet**, StealthPay utilizes **Fully Homomorphic Encryption (FHE)** via the **CoFHE SDK** to create a production-ready confidential payroll and treasury platform. 
+StealthPay treats confidentiality as a cryptographic primitive. Operating as a smart contract utilizing the **Fhenix CoFHE Coprocessor** natively on **Arbitrum Sepolia**, StealthPay creates a production-ready confidential payroll and treasury platform. 
 
 For the first time, organizations can compute payroll distributions, enforce solvency, and process stablecoin flows **where the smart contract state itself remains fully encrypted during computation.**
 
@@ -40,7 +40,7 @@ StealthPay bridges a highly complex FHE backend with an Apple/Linear-grade premi
 
 | Layer | Technology Used | Implementation Details |
 |---|---|---|
-| **Encrypted Compute** | Fhenix (Nitrogen Testnet) | `https://api.nitrogen.fhenix.zone` |
+| **Encrypted Compute** | Fhenix CoFHE (Arbitrum Sepolia) | `https://sepolia-rollup.arbitrum.io/rpc` |
 | **Smart Contracts** | Solidity 0.8.25 | Hardhat deployed, targeting `cancun` EVM |
 | **FHE Library** | `@fhenixprotocol/cofhe-contracts` | Native FHE bindings and `euint` types |
 | **Frontend Shell** | Next.js 15 + React 19 | App Router, fully typed Server Components |
@@ -61,7 +61,7 @@ Real on-chain FHE logic lives in `contracts/ConfidentialPayroll.sol`, utilizing 
 
 ### 🧪 Hardhat Testing & Deployment
 
-The backend is fully configured for the Fhenix Nitrogen testnet without any ESM/CommonJS module conflicts.
+The backend is fully configured for the Fhenix CoFHE Coprocessor on Arbitrum Sepolia without any ESM/CommonJS module conflicts.
 
 ```bash
 # Compile FHE smart contracts
@@ -70,8 +70,8 @@ npx hardhat compile --config hardhat.config.cjs
 # Run local contract tests
 npx hardhat test --config hardhat.config.cjs
 
-# Deploy directly to Fhenix Nitrogen Testnet
-npx hardhat run scripts/deploy.ts --network fhenixNitrogen --config hardhat.config.cjs
+# Deploy directly to Arbitrum Sepolia (Fhenix Coprocessor)
+npx hardhat run scripts/deploy.ts --network arbitrumSepolia --config hardhat.config.cjs
 ```
 
 ---

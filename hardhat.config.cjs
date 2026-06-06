@@ -12,9 +12,9 @@ module.exports = {
     },
   },
   networks: {
-    fhenixNitrogen: {
-      url: "https://api.nitrogen.fhenix.zone",
-      chainId: 8008148,
+    arbitrumSepolia: {
+      url: "https://sepolia-rollup.arbitrum.io/rpc",
+      chainId: 421614,
       accounts: [PRIVATE_KEY],
     },
     hardhat: { chainId: 31337 },
